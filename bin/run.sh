@@ -27,14 +27,19 @@ printf "\e[0;32m#### INSTALL/UPDATE PALWORD SERVER BINARIES\e[0m\n"
 mkdir -p /palworld
 chown -R steam:steam /palworld
 
-# if [ "${UPDATE_ON_BOOT}" = true || ! -f /palworld/steamapps ]; then
-#     su steam -c '/home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit'
-# fi
-
-echo $(ls -la)
-cd palworld || exit
+if [ "${UPDATE_ON_BOOT}" = true ] || [ ! -f /palworld/steamapps ]; then
+    su steam -c '/home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit'
+fi
 
 printf "\e[0;32m#### SYNCING CONFIGURATION FILES\e[0m\n"
+if [ ! -f /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
+    printf "\e[0;32m*****MISSING CONFIGURATION FILES, CREATING...*****\e[0m\n"
+    cd /palworld || exit
+    su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
+    sleep 5
+    cd /home/steam || exit
+fi
+
 rm -rf  GeneratedConfig.ini
 python scripts/gen-config.py
 
@@ -53,5 +58,5 @@ EOL
 
 printf "\e[0;32m#### STARTING SERVER\e[0m\n"
 START_COMMAND=$(python scripts/gen-command.py)
-echo "${STARTCOMMAND}"
-su steam -c "${STARTCOMMAND}"
+cd /palworld || exit
+su steam -c "${START_COMMAND}"

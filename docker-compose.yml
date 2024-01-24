@@ -1,8 +1,8 @@
 services:
-   palworld-server:
+   server:
       build: .
       restart: unless-stopped
-      container_name: palworld-server
+      container_name: server
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
@@ -10,6 +10,6 @@ services:
          - PUID=1000
          - PGID=1000
          - MULTITHREADING=true
+         - UPDATE_ON_BOOT=true
       volumes:
          - ./palworld:/palworld/
-         - ./config.yml:/config.yml

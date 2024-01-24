@@ -34,6 +34,8 @@ RUN chmod +x /home/steam/server/*.sh
 
 COPY ./scripts/* /home/steam/server/scripts/
 
+COPY ./config.yml /home/steam/server/config.yml
+
 WORKDIR /home/steam/server
 
 # Healthcheck
