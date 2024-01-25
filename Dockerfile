@@ -26,7 +26,10 @@ RUN mv rcon-cli /usr/bin/rcon-cli
 ENV PUID=1000 \
     PGID=1000 \
     MULTITHREADING=false \
-    UPDATE_ON_BOOT=true
+    UPDATE_ON_BOOT=true \
+    RCON_ENABLED=true \
+    RCON_PORT=25575 \
+    RCON_PASSWORD=<RCON_PASSWORD>
 
 # Copy files
 COPY ./bin/* /home/steam/server/

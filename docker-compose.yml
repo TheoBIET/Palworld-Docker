@@ -6,10 +6,14 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
+        - 25575:25575/tcp
       environment:
          - PUID=1000
          - PGID=1000
          - MULTITHREADING=true
          - UPDATE_ON_BOOT=true
+         - RCON_ENABLED=true
+         - RCON_PORT=25575
+         - RCON_PASSWORD=<RC0N_PASSW0RD>
       volumes:
          - ./palworld:/palworld/

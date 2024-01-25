@@ -38,6 +38,17 @@ cp config.example.yml config.yml
 
 4. Edit the `config.yml` file to your liking
 
+5. Edit the values between `<>` in the `docker-compose.yml` file
+```yaml
+environment:
+    - ENV HOST=0.0.0.0
+    - PORT=8212
+    - RCON_PORT=25575
+    - RCON_PASSWORD=<RCON_PASSWORD>
+    - SERVER_IP=<SERVER_IP>
+    - SERVER_PORT=<SERVER_PORT>
+```
+
 5. Start the containers
 ```bash
 docker-compose up -d

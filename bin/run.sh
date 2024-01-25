@@ -12,7 +12,11 @@ printf "\033[32mhttps://github.com/TheoBIET/palworld-docker\e[0m\n"
 printf "\033[32mVersion : 0.1.0\e[0m\n"
 printf "\033[32mAuthor : TheoBIET (from thijsvanloef/palworld-server-docker)\e[0m\n"
 printf "\n"
-printf "\n"
+
+printf "\e[0;32m#### CREATE BACKUP\e[0m\n"
+if [ -d "backups" ]; then
+  ./home/steam/server/bin/backup.sh
+fi
 
 printf "\e[0;32m#### VERIFY USER PERMISSIONS\e[0m\n"
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
@@ -33,7 +37,7 @@ fi
 
 printf "\e[0;32m#### SYNCING CONFIGURATION FILES\e[0m\n"
 if [ ! -f /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
-    printf "\e[0;32m*****MISSING CONFIGURATION FILES, CREATING...*****\e[0m\n"
+    printf "\e[0;32m#### MISSING CONFIGURATION FILES, CREATING...\e[0m\n"
     cd /palworld || exit
     su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
     sleep 5
@@ -53,10 +57,11 @@ printf "\e[0;32m#### RCON CONFIGURATION\e[0m\n"
 cat >~/.rcon-cli.yaml  <<EOL
 host: localhost
 port: ${RCON_PORT}
-password: ${ADMIN_PASSWORD}
+password: ${RCON_PASSWORD}
 EOL
 
 printf "\e[0;32m#### STARTING SERVER\e[0m\n"
 START_COMMAND=$(python scripts/gen-command.py)
+echo "${START_COMMAND}"
 cd /palworld || exit
 su steam -c "${START_COMMAND}"
