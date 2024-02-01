@@ -29,8 +29,11 @@ functions.check_steamcmd()
 log.step('Install/Update Palworld server binaries...')
 functions.download_server()
 
-log.step(f'Setting up Palworld server...')
+log.step('Setting up Palworld server...')
 functions.setup_server()
 
-log.step(f'Launching Palworld server...')
+log.step('Verifying CRON jobs for backups...')
+functions.verify_cron_jobs()
+
+log.step('Launching Palworld server...')
 functions.launch_server()

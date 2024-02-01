@@ -30,7 +30,7 @@ class Logger:
         self.current_step = 0
         logging.basicConfig(
           level=logging.INFO, 
-          filename='logs/py_scripts.log',
+          filename='/home/steam/server/logs/py_scripts.log',
           format=FORMAT,
         )
         

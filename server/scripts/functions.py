@@ -3,7 +3,9 @@ import yaml
 import subprocess
 import re
 import json
+import time
 from logger import log
+from backup import backup
 
 APP_ID                    = 2394010
 SERVER_CONFIG_FILE_PATH   = "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
@@ -18,13 +20,13 @@ def get_env(key):
         log.critical(f'Environment variable {key} is not set.')
         exit(0)
         
-def execute_command(command, error_message):
+def execute_command(command, error_message, timeout = None):
     try:
         if type(command) == str:
             command = command.split(' ')
-        subprocess.run(command, check = True)
-    except Exception as e:
-        log.critical(e)
+        subprocess.run(command, check = True, timeout = timeout)
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
         log.critical(error_message)
         log.critical(f'Command: {command}')
         exit(0)
@@ -74,7 +76,6 @@ def download_server():
         response = json.loads(subprocess.check_output(["curl", "-s", f"https://api.steamcmd.net/v1/info/{APP_ID}"]))
         latest_version = int(response['data'][f'{APP_ID}']['depots']['branches']['public']['buildid'])
     except Exception as e:
-        log.error(e)
         log.error('Failed to get latest version from steamcmd.')
         return
 
@@ -91,13 +92,28 @@ def download_server():
     else:
         log.info('Updating server binaries...')
         execute_command(
-            ['su', 'steam', '-c', '"/home/steam/steamcmd/steamcmd.sh +force_install_dir \"/palworld\" +login anonymous +app_update 2394010 validate +quit"'],
+            ['su', 'steam', '-c', '/home/steam/steamcmd/steamcmd.sh +force_install_dir \"/palworld\" +login anonymous +app_update 2394010 validate +quit'],
             'Failed to download server binaries.'
         )
         
         with open('/palworld/version.txt', 'w') as file:
             file.write(str(latest_version))
+
+def verify_cron_jobs():
+    log.info('Creating backup...')
+    backup()
     
+    if os.path.isfile('/etc/cron.d/palworld-backup'):
+        return
+    
+    if get_env('BACKUP_CRON_ENABLED').lower() == 'true':
+        os.system(f'echo "*/1 * * * * root python /home/steam/server/scripts/backup.py" >> /etc/cron.d/palworld-backup')
+        os.system('echo "# This line is required for a valid cron" >> /etc/cron.d/palworld-backup')
+        os.system('chmod 0644 /etc/cron.d/palworld-backup')
+        os.system('crontab -u root /etc/cron.d/palworld-backup')
+        os.system('service cron start')
+        os.system('service cron reload')
+        os.system('crontab -l')
 
 def get_config():
     config = {}
@@ -108,25 +124,28 @@ def get_config():
 
 def setup_server():
     if not os.path.isfile(SERVER_CONFIG_FILE_PATH):
-        execute_command(
-            ['su', 'steam', '-c', 'timeout --preserve-status 15s /palworld/PalServer.sh 1> /dev/null'],
-            'Failed to create default configuration.'
-        )
+        os.system(f'su steam -c "timeout --preserve-status 15s /palworld/PalServer.sh 1> /dev/null"')
+        time.sleep(15)
     
     config = get_config()  
     config_string = SERVER_CONFIG_HEADER + "\nOptionSettings=("
     
     for key, value in config.items():
-        if value == None:
-            config_string += f"{key}=null,"
-        elif re.match(r'^\{\{(.*)\}\}$', str(value)):
+        if re.match(r'^\{\{(.*)\}\}$', str(value)):
             env_key = re.search(r'^\{\{(.*)\}\}$', str(value)).group(1)
             if '@' in env_key:
                 cast = env_key.split('@')[1]
                 env_key = env_key.split('@')[0]
-                config_string += f"{key}={cast}({get_env(env_key)}),"
-            else:
-                config_string += f"{key}={get_env(env_key)},"
+                if cast == 'int':
+                    config_string += f"{key}={int(get_env(env_key))},"
+                elif cast == 'float':
+                    config_string += f"{key}={float(get_env(env_key))},"
+                elif cast == 'bool':
+                    config_string += f"{key}={get_env(env_key).lower() == 'true'},"
+                elif cast == 'str':
+                    config_string += f"{key}=\"{get_env(env_key)}\","
+        elif value == None:
+            config_string += f"{key}=null,"
         elif isinstance(value, bool):
             config_string += f"{key}={str(value)},"
         elif isinstance(value, str):
@@ -160,4 +179,7 @@ def launch_server():
     if get_env('RCON_ENABLED').lower() == 'true':
         command += " -rcon"
     
-    log.info(f'Starting server with command: {command}')
+    execute_command(
+        ['su', 'steam', '-c', f'cd /palworld && {command}'],
+        'Failed to launch server.'
+    )

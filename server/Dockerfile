@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget=1.21-1+deb11u1 \
     python3 \
     python3-pip \
+    cron \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
