@@ -1,0 +1,22 @@
+{
+  "name": "palworld-bot",
+  "version": "1.0.0",
+  "main": "app/index.js",
+  "author": "TheoBIET",
+  "license": "MIT",
+  "scripts": {
+    "start": "pm2 start app/index.js --ignore-watch=\"node_modules\" --name \"palworld-bot\"",
+    "stop": "pm2 stop \"palworld-bot\"",
+    "restart": "pm2 restart \"palworld-bot\"",
+    "delete": "pm2 delete \"palworld-bot\"",
+    "dev": "nodemon app/index.js"
+  },
+  "dependencies": {
+    "discord.js": "14.14.1",
+    "dotenv": "16.4.1",
+    "pm2": "5.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "3.0.3"
+  }
+}

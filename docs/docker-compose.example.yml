@@ -1,0 +1,69 @@
+version: "3.8"
+services:
+   dedicated:
+      container_name: palworld-dedicated
+      restart: unless-stopped
+      mem_limit: 32G
+      build:
+         context: ./server
+         dockerfile: Dockerfile
+      ports:
+        - 8211:8211/udp
+        - 27015:27015/udp
+        - 25575:25575/tcp
+        - 25575:25575/udp
+      volumes:
+         - ./server/palworld:/palworld/
+         - ./server/logs:/home/steam/server/logs/
+         - ./server/backups:/home/steam/server/backups/
+         - ./server/config.yml:/home/steam/server/config.yml
+      environment:
+         PUID: 1000
+         PGID: 1000
+         SERVER_PUBLIC_IP: "<YOUR_PUBLIC_IP>"
+         SERVER_PORT: 8211
+         SERVER_ADMIN_PASSWORD: "<ADMIN_PASSWORD>"
+         SERVER_PASSWORD: "<SERVER_PASSWORD>"
+         SERVER_QUERY_ACTIVE: True
+         SERVER_QUERY_PORT: 27015
+         AUTOMATIC_UPDATE: True
+         USE_MULTITHREADING: True
+         USE_COMMUNITY: True
+         RCON_ENABLED: True
+         RCON_PORT: 25575
+         RCON_PASSWORD: "<RC0N_PASSW0RD>"
+         BACKUP_ENABLED: True
+         BACKUP_CRON: "0 0 * * *"
+
+   discord-bot:
+      container_name: palworld-discord-bot
+      restart: unless-stopped
+      mem_limit: 1G
+      build: 
+         context: ./bot
+         dockerfile: Dockerfile
+      volumes:
+      environment:
+         PUID: 1000
+         PGID: 1000
+         DISCORD_TOKEN: "<YOUR_DISCORD_TOKEN>"
+         PALWORLD_SERVERS_LIST: > 
+           [
+             {
+              "name": "palworld-dedicated",
+              "container": "palworld-dedicated",
+              "adminPassword": "<ADMIN_PASSWORD>",
+              "publicIp": "<YOUR_PUBLIC_IP>",
+              "port": 8211,
+              "rconEnabled": true,
+              "rconPort": 25575,
+              "rconPassword": "<RC0N_PASSW0RD>"
+             } 
+           ]
+      networks:
+         - palworld-network
+
+   
+networks:
+   palworld-network:
+      driver: bridge

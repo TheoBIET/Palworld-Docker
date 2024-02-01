@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 RUN ln -sf /usr/bin/python3 /usr/bin/python
-RUN python -m pip install --no-cache-dir \
-    pyyaml
+RUN python -m pip install --no-cache-dir --upgrade pip
+RUN python -m pip install --no-cache-dir pyyaml
 
 # Install RCON
 RUN wget -q https://github.com/itzg/rcon-cli/releases/download/1.6.4/rcon-cli_1.6.4_linux_amd64.tar.gz -O - | tar -xz
@@ -32,11 +32,7 @@ ENV PUID=1000 \
     RCON_PASSWORD=<RCON_PASSWORD>
 
 # Copy files
-COPY ./bin/* /home/steam/server/
-RUN chmod +x /home/steam/server/*.sh
-
 COPY ./scripts/* /home/steam/server/scripts/
-
 COPY ./config.yml /home/steam/server/config.yml
 
 WORKDIR /home/steam/server
@@ -46,4 +42,4 @@ HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT} ${RCON_PORT}
-ENTRYPOINT ["/home/steam/server/run.sh"]
+CMD ["python", "/home/steam/server/scripts/initialize.py"]
