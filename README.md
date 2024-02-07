@@ -23,31 +23,30 @@ Palword-SM is a set of Docker containers that allow you to easily manage a dedic
 
 1. Clone the repository
 ```bash
-git clone git@github.com:TheoBIET/Palword-SM.git
+git clone git@github.com:TheoBIET/Palworld-Docker.git Palworld
 ```
 
 2. Go to the project folder
 ```bash
-cd Palword-SM
+cd Palworld
 ```
 
-3. Create the `config.yml` from the `config.example.yml` file
+3. Create the `config.x.yml` from the `examples/config.example.yml` file
 ```bash
-cp config.example.yml config.yml
+cp config.example.yml server/config.1.yml
 ```
 
-4. Edit the `config.yml` file to your liking
-
-5. Edit the values between `<>` in the `docker-compose.yml` file
-```yaml
-environment:
-    - ENV HOST=0.0.0.0
-    - PORT=8212
-    - RCON_PORT=25575
-    - RCON_PASSWORD=<RCON_PASSWORD>
-    - SERVER_IP=<SERVER_IP>
-    - SERVER_PORT=<SERVER_PORT>
+3. Create the `whitelist.x.yml` from the `examples/whitelist.example.yml` file
+```bash
+cp config.example.yml server/whitelist.1.yml
 ```
+
+3. Create the `docker-compose.yml` from the `examples/whitelist.example.yml` file
+```bash
+cp config.example.yml server/whitelist.1.yml
+```
+
+4. Edit the `config.x.yml` file to your liking
 
 5. Start the containers
 ```bash
@@ -58,6 +57,7 @@ docker-compose up -d
 
 ### 💻 RCON Commands
 
+To run RCON Commands, you can use the `palworld-api` container.
 You can find the list of RCON commands [here](https://tech.palworldgame.com/server-commands).
 
 ### 🐛 Report a bug

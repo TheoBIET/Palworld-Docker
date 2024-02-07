@@ -1,11 +1,17 @@
-# Custom
-palworld
-palworld-1
-palworld-*
-backups
-server/config.yml
-server/config-*.yml
+.env
 docker-compose.yml
+
+server/*.yml
+server/worlds/*
+!server/backups/.gitkeep
+!server/bin/*
+!server/core/*
+!server/docker/*
+!server/worlds/.gitkeep
+
+# Temp
+api
+bot
 
 # Logs
 logs

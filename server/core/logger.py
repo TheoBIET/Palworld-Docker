@@ -1,4 +1,5 @@
 import logging
+import os
 
 FORMAT = '%(asctime)s - (%(name)s) - (%(filename)s:%(lineno)d) - [%(levelname)s] - %(message)s'
 
@@ -26,11 +27,11 @@ class Formatter(logging.Formatter):
         return formatter.format(record)
 
 class Logger:
-    def __init__(self):
+    def __init__(self, file_path='/home/steam/server/logs/py_scripts.log'):            
         self.current_step = 0
         logging.basicConfig(
           level=logging.INFO, 
-          filename='/home/steam/server/logs/py_scripts.log',
+          filename=file_path,
           format=FORMAT,
         )
         
@@ -65,5 +66,3 @@ class Logger:
     def step(self, message):
       self.current_step += 1
       logging.info(f'[{self.current_step}] {message}')
-      
-log = Logger()

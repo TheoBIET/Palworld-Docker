@@ -1,0 +1,85 @@
+# ______     _                    _     _       ______           _             
+# | ___ \   | |                  | |   | |      |  _  \         | |            
+# | |_/ /_ _| |_      _____  _ __| | __| |______| | | |___   ___| | _____ _ __ 
+# |  __/ _` | \ \ /\ / / _ \| '__| |/ _` |______| | | / _ \ / __| |/ / _ \ '__|
+# | | | (_| | |\ V  V / (_) | |  | | (_| |      | |/ / (_) | (__|   <  __/ |   
+# \_|  \__,_|_| \_/\_/ \___/|_|  |_|\__,_|      |___/ \___/ \___|_|\_\___|_|       
+#
+
+### Server ###
+ServerName:                             "<SERVER_NAME>"
+ServerDescription:                      "<SERVER_DESCRIPTION>"
+ServerPassword:                         "{{SERVER_PASSWORD@str}}"
+AdminPassword:                          "{{SERVER_ADMIN_PASSWORD@str}}"
+ServerPlayerMaxNum:                     16
+CoopPlayerMaxNum:                       4
+GuildPlayerMaxNum:                      20
+BanListURL:                             "/palworld/Pal/Saved/SaveGames/banlist.txt"
+
+Region:                                 "<REGION>"
+PublicIP:                               "{{SERVER_PUBLIC_IP@str}}"
+PublicPort:                             "{{SERVER_PORT@int}}"
+RCONEnabled:                            "{{RCON_ENABLED@bool}}"
+RCONPort:                               "{{RCON_PORT@int}}"
+
+### World ###
+Difficulty:                             null
+DayTimeSpeedRate:                       1.000000
+NightTimeSpeedRate:                     1.000000
+ExpRate:                                1.000000
+EnemyDropItemRate:                      1.000000
+DeathPenalty:                           "All"
+DropItemMaxNum:                         3000
+DropItemMaxNum_UNKO:                    100
+BaseCampMaxNum:                         128
+BaseCampWorkerMaxNum:                   15
+DropItemAliveMaxHours:                  1.000000
+AutoResetGuildTimeNoOnlinePlayers:      72.000000
+WorkSpeedRate:                          1.000000
+
+### Player ###
+PlayerDamageRateAttack:                 1.000000           # 1.000000
+PlayerDamageRateDefense:                1.000000           # 1.000000
+PlayerStomachDecreaceRate:              0.330000           # 1.000000
+PlayerStaminaDecreaceRate:              0.800000           # 1.000000
+PlayerAutoHPRegeneRate:                 1.500000           # 1.000000
+PlayerAutoHpRegeneRateInSleep:          2.000000           # 1.000000
+
+### Pal ###
+PalCaptureRate:                         1.000000           # 1.000000
+PalSpawnNumRate:                        1.500000           # 1.000000 #!temp
+PalDamageRateAttack:                    1.000000           # 1.000000
+PalDamageRateDefense:                   1.000000           # 1.000000
+PalStomachDecreaceRate:                 0.500000           # 1.000000
+PalStaminaDecreaceRate:                 0.800000           # 1.000000 #!temp
+PalAutoHPRegeneRate:                    1.000000           # 1.000000
+PalAutoHpRegeneRateInSleep:             1.000000           # 1.000000
+PalEggDefaultHatchingTime:              12.000000          # 72.000000 #!temp
+
+### Build ###
+BuildObjectDamageRate:                  1.000000           # 1.000000
+BuildObjectDeteriorationDamageRate:     1.000000           # 1.000000
+
+### Collection ###
+CollectionDropRate:                     1.000000           # 1.000000
+CollectionObjectHpRate:                 1.000000           # 1.000000
+CollectionObjectRespawnSpeedRate:       1.000000           # 1.000000
+
+### Variable ###
+bIsMultiplay:                           true               # false
+bIsPvP:                                 true               # false
+bCanPickupOtherGuildDeathPenaltyDrop:   false              # false
+bEnableNonLoginPenalty:                 true               # true
+bEnableFastTravel:                      true               # true
+bIsStartLocationSelectByMap:            false              # true
+bExistPlayerAfterLogout:                true               # false
+bEnableDefenseOtherGuildPlayer:         false              # false
+bUseAuth:                               true               # true
+bEnablePlayerToPlayerDamage:            true               # false
+bEnableFriendlyFire:                    false              # false
+bEnableInvaderEnemy:                    true               # true
+bActiveUNKO:                            false              # false
+bEnableAimAssistPad:                    true               # true
+bEnableAimAssistKeyboard:               false              # false
+bAutoResetGuildNoOnlinePlayers:         true               # false
+ 
